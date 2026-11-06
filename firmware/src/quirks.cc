@@ -13,7 +13,6 @@ const uint16_t PRODUCT_ID_ELECOM_M_DT1URBK = 0x00fe;
 const uint16_t PRODUCT_ID_ELECOM_M_DT1DRBK = 0x00ff;
 const uint16_t PRODUCT_ID_ELECOM_M_HT1URBK = 0x010c;
 const uint16_t PRODUCT_ID_ELECOM_M_HT1URBK_019B = 0x019b;
-const uint16_t PRODUCT_ID_ELECOM_M_HT1URBK_010C = 0x010c;
 const uint16_t PRODUCT_ID_ELECOM_M_HT1DRBK_010D = 0x010d;
 const uint16_t PRODUCT_ID_ELECOM_M_HT1DRBK_011C = 0x011c;
 const uint16_t PRODUCT_ID_ELECOM_M_HT1MRBK_01AA = 0x01aa;
@@ -1024,6 +1023,15 @@ void gamepad_normalize(std::unordered_map<uint32_t, usage_def_t>& current_map, u
 }
 
 void apply_quirks(uint16_t vendor_id, uint16_t product_id, std::unordered_map<uint8_t, std::unordered_map<uint32_t, usage_def_t>>& usage_map, const uint8_t* report_descriptor, int len, uint8_t itf_num) {
+    // Brutally wipe out vendor-defined report IDs for the wired Huge to test for stack overload
+    if (vendor_id == 0x056e && product_id == 0x010c) {
+        usage_map.erase(2); // Erase Vendor ID Report 2
+        usage_map.erase(3); // Erase System Control Report 3
+        usage_map.erase(4); // Erase Vendor ID Report 4
+        usage_map.erase(5); // Erase Consumer Report 5
+        usage_map.erase(6); // Erase Vendor ID Report 6
+    }
+    
     // Button Fn1 is described as a constant (padding) in the descriptor.
     // We add it as button 6.
     if (vendor_id == VENDOR_ID_ELECOM &&
@@ -1048,7 +1056,6 @@ void apply_quirks(uint16_t vendor_id, uint16_t product_id, std::unordered_map<ui
               product_id == PRODUCT_ID_ELECOM_M_DT1DRBK ||
               product_id == PRODUCT_ID_ELECOM_M_HT1URBK ||
               product_id == PRODUCT_ID_ELECOM_M_HT1URBK_019B ||
-              product_id == PRODUCT_ID_ELECOM_M_HT1URBK_010C ||
               product_id == PRODUCT_ID_ELECOM_M_HT1DRBK_010D) &&
              len == sizeof(elecom_huge_descriptor) &&
              !memcmp(report_descriptor, elecom_huge_descriptor, len)) ||
