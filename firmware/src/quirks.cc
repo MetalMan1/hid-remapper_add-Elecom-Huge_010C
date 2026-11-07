@@ -1056,21 +1056,21 @@ void apply_quirks(uint16_t vendor_id, uint16_t product_id, std::unordered_map<ui
             (product_id == PRODUCT_ID_ELECOM_M_HT1MRBK_01AB &&
                 len == sizeof(elecom_huge_plus_01ab_descriptor) &&
                 !memcmp(report_descriptor, elecom_huge_plus_01ab_descriptor, len)))) {
-        usage_map[1][0x00090006] = (usage_def_t){
+        usage_map[0][0x00090006] = (usage_def_t){
             .report_id = 1,
             .size = 1,
             .bitpos = 5,
             .is_relative = false,
             .logical_minimum = 0,
         };
-        usage_map[1][0x00090007] = (usage_def_t){
+        usage_map[0][0x00090007] = (usage_def_t){
             .report_id = 1,
             .size = 1,
             .bitpos = 6,
             .is_relative = false,
             .logical_minimum = 0,
         };
-        usage_map[1][0x00090008] = (usage_def_t){
+        usage_map[0][0x00090008] = (usage_def_t){
             .report_id = 1,
             .size = 1,
             .bitpos = 7,
