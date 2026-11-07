@@ -1023,15 +1023,6 @@ void gamepad_normalize(std::unordered_map<uint32_t, usage_def_t>& current_map, u
 }
 
 void apply_quirks(uint16_t vendor_id, uint16_t product_id, std::unordered_map<uint8_t, std::unordered_map<uint32_t, usage_def_t>>& usage_map, const uint8_t* report_descriptor, int len, uint8_t itf_num) {
-    // Brutally wipe out vendor-defined report IDs for the wired Huge to test for stack overload
-    if (vendor_id == 0x056e && product_id == 0x010c) {
-        usage_map.erase(2); // Erase Vendor ID Report 2
-        usage_map.erase(3); // Erase System Control Report 3
-        usage_map.erase(4); // Erase Vendor ID Report 4
-        usage_map.erase(5); // Erase Consumer Report 5
-        usage_map.erase(6); // Erase Vendor ID Report 6
-    }
-    
     // Button Fn1 is described as a constant (padding) in the descriptor.
     // We add it as button 6.
     if (vendor_id == VENDOR_ID_ELECOM &&
